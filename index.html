@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پیام ویژه</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-start: #1a0a1f;
+      --bg-mid: #2d1b3d;
+      --bg-end: #1a0a1f;
+      --accent: #e91e8c;
+      --accent-soft: #f48fb1;
+      --text: #fce4ec;
+      --text-muted: #f8bbd9;
+      --card-bg: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(233, 30, 140, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+      min-height: 100vh;
+      color: var(--text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      opacity: 0.15;
+      animation: float-up 12s linear infinite;
+      color: var(--accent-soft);
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) rotate(0deg) scale(0.6);
+        opacity: 0;
+      }
+      10% { opacity: 0.2; }
+      90% { opacity: 0.15; }
+      100% {
+        transform: translateY(-10vh) rotate(360deg) scale(1);
+        opacity: 0;
+      }
+    }
+
+    #password-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #12061a 0%, #2a1238 40%, #1a0a24 100%);
+      transition: opacity 0.7s ease, visibility 0.7s ease;
+    }
+
+    #password-gate.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .lock-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 48px 40px;
+      width: min(90vw, 380px);
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45),
+                  0 0 40px rgba(233, 30, 140, 0.12);
+      animation: card-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes card-in {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .lock-icon {
+      font-size: 48px;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 0 12px rgba(233, 30, 140, 0.5));
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .lock-card h1 {
+      font-size: 1.45rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .lock-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    #password-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.15rem;
+      font-family: 'Vazirmatn', sans-serif;
+      text-align: center;
+      letter-spacing: 0.35em;
+      border: 1.5px solid rgba(233, 30, 140, 0.35);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    #password-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(233, 30, 140, 0.18);
+    }
+
+    #password-input::placeholder {
+      letter-spacing: 0.1em;
+      color: rgba(248, 187, 217, 0.45);
+    }
+
+    #unlock-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.05rem;
+      font-family: 'Vazirmatn', sans-serif;
+      font-weight: 600;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #e91e8c, #c2185b);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      box-shadow: 0 8px 24px rgba(233, 30, 140, 0.35);
+    }
+
+    #unlock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(233, 30, 140, 0.45);
+      filter: brightness(1.08);
+    }
+
+    #unlock-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-msg {
+      color: #ff8a80;
+      font-size: 0.85rem;
+      margin-top: 14px;
+      min-height: 1.2em;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .error-msg.show {
+      opacity: 1;
+    }
+
+    #content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+    }
+
+    #content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .message-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 48px 40px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4),
+                  0 0 50px rgba(233, 30, 140, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .header .emoji {
+      font-size: 42px;
+      display: block;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 10px rgba(233, 30, 140, 0.4));
+    }
+
+    .header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent-soft);
+      letter-spacing: -0.02em;
+    }
+
+    .message-body {
+      font-size: 1.08rem;
+      line-height: 2.05;
+      font-weight: 400;
+      color: var(--text);
+      text-align: justify;
+    }
+
+    .message-body p {
+      margin-bottom: 1.35em;
+    }
+
+    .message-body p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .closing {
+      margin-top: 40px;
+      text-align: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(233, 30, 140, 0.2);
+    }
+
+    .closing .love {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent-soft);
+      margin-bottom: 6px;
+    }
+
+    .closing .heart-big {
+      font-size: 32px;
+      display: inline-block;
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.18); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.12); }
+      60% { transform: scale(1); }
+    }
+
+    .deco {
+      position: absolute;
+      opacity: 0.07;
+      font-size: 80px;
+      pointer-events: none;
+    }
+    .deco-1 { top: 20px; right: 20px; transform: rotate(15deg); }
+    .deco-2 { bottom: 30px; left: 25px; transform: rotate(-20deg); }
+
+    @media (max-width: 520px) {
+      .lock-card {
+        padding: 36px 28px;
+      }
+      .message-card {
+        padding: 36px 24px;
+      }
+      .message-body {
+        font-size: 1rem;
+        line-height: 1.95;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts" id="hearts"></div>
+
+  <div id="password-gate">
+    <div class="lock-card">
+      <div class="lock-icon">🔒</div>
+      <h1>پیام خصوصی</h1>
+      <p>برای مشاهده پیام، رمز عبور را وارد کنید</p>
+      <div class="input-wrap">
+        <input type="password" id="password-input" placeholder="••••" maxlength="10" autocomplete="off" autofocus>
+      </div>
+      <button id="unlock-btn">باز کردن</button>
+      <div class="error-msg" id="error-msg">رمز اشتباه است، دوباره تلاش کنید</div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="message-card">
+      <div class="deco deco-1">♡</div>
+      <div class="deco deco-2">♡</div>
+
+      <div class="header">
+        <span class="emoji">💌</span>
+        <h2>پیام از دل</h2>
+      </div>
+
+      <div class="message-body">
+        <p>ببین، منم با حرف‌های امشب از خودم و صبری که توی این یک سال گذشته به خرج دادم، احساس بدی پیدا کردم.</p>
+
+        <p>به نظرم با صحبت‌های امشب نه چیزی درست شد و نه چیزی خراب‌تر؛ چون وقتی ذهن آدم به‌هم می‌ریزه، درست شدنش زمان می‌خواد.</p>
+
+        <p>تو نمی‌تونی بابت چیزی که ریشه‌ش به رفتار خودت برمی‌گرده، منو به خاطر حال و ذهنی که الان دارم بازخواست کنی. تو یه رفتاری داشتی و واکنش و فشار ذهنی من توی اون مقطع، بازتاب همون اتفاق بود.</p>
+
+        <p>من الان کار اشتباهی نکردم، فقط ناراحتم. تو هم کاملاً حق داری از رفتار الان من ناراحت باشی. پس فکر می‌کنم هر دومون به یه مقدار زمان نیاز داریم تا ذهنمون آروم‌تر بشه.</p>
+
+        <p>اینکه بخوای با شخص دیگه‌ای دوست بشی، انتخاب خودته و من نمی‌تونم در این مورد تصمیم بگیرم؛ اما این اتفاق چیزی رو در ذهن من بهتر نمی‌کنه و فقط باعث می‌شه نگاه من به تو منفی‌تر بشه.</p>
+
+        <p>پس بیا به احساسات هم احترام بذاریم، به هم زمان بدیم و انتظار نداشته باشیم همه‌چیز با یه صحبت حل بشه.</p>
+
+        <p>امیدوارم تونسته باشم منظورم رو کامل بهت برسونم و منو درک کرده باشی. سعی کردم همه‌چیز رو صادقانه برات توضیح بدم.</p>
+      </div>
+
+      <div class="closing">
+        <div class="love">دوستت دارم، بیشتر از همیشه.</div>
+        <span class="heart-big">❤️</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const heartsContainer = document.getElementById('hearts');
+    const heartSymbols = ['♥', '♡', '❤', '💕'];
+    for (let i = 0; i < 18; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = heartSymbols[i % heartSymbols.length];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+      heart.style.animationDelay = (Math.random() * 12) + 's';
+      heart.style.fontSize = (14 + Math.random() * 18) + 'px';
+      heartsContainer.appendChild(heart);
+    }
+
+    const CORRECT_PASSWORD = '2932';
+    const gate = document.getElementById('password-gate');
+    const content = document.getElementById('content');
+    const input = document.getElementById('password-input');
+    const btn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    function tryUnlock() {
+      if (input.value === CORRECT_PASSWORD) {
+        gate.classList.add('hidden');
+        setTimeout(() => {
+          content.classList.add('visible');
+        }, 350);
+      } else {
+        errorMsg.classList.add('show');
+        input.value = '';
+        input.focus();
+        input.style.animation = 'none';
+        input.offsetHeight;
+        input.style.animation = 'shake 0.4s ease';
+        setTimeout(() => errorMsg.classList.remove('show'), 2500);
+      }
+    }
+
+    btn.addEventListener('click', tryUnlock);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryUnlock();
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-8px); }
+        40%, 80% { transform: translateX(8px); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
